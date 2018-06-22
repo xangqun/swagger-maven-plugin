@@ -1,0 +1,111 @@
+#{{#info}}{{title}}
+
+
+## {{join schemes " | "}}://{{host}}{{basePath}}
+
+
+{{description}}
+
+{{#contact}}
+[**Contact the developer**](mailto:{{email}})
+{{/contact}}
+
+**Version** {{version}}
+
+[**Terms of Service**]({{termsOfService}})
+
+{{#license}}[**{{name}}**]({{url}}){{/license}}
+
+{{/info}}
+
+{{#if consumes}}**Consumes:** {{join consumes ", "}}{{/if}}
+
+{{#if produces}}**Produces:** {{join produces ", "}}{{/if}}
+
+{{#if securityDefinitions}}
+# Security Definitions
+{{/if}}
+{{> security}}
+{{#each tags}}{{#this}}{{name}}{{/this}}{{/each}}
+# APIs
+
+{{#each paths}}{{index}}{{#this}}{{#get}}{{> title}}{{/get}}{{#put}}{{> title}}{{/put}}{{#post}}{{> title}}{{/post}}{{#delete}}{{> title}}{{/delete}}{{/this}}{{/each}}
+
+{{#each paths}}
+## {{@key}}
+{{#this}}
+{{#get}}
+### GET
+{{> operation}}
+{{/get}}
+
+{{#put}}
+### PUT
+{{> operation}}
+{{/put}}
+
+{{#post}}
+### POST
+
+{{> operation}}
+
+{{/post}}
+
+{{#delete}}
+### DELETE
+{{> operation}}
+{{/delete}}
+
+{{#option}}
+### OPTION
+{{> operation}}
+{{/option}}
+
+{{#patch}}
+### PATCH
+{{> operation}}
+{{/patch}}
+
+{{#head}}
+### HEAD
+{{> operation}}
+{{/head}}
+
+{{/this}}
+{{/each}}
+
+# 字段描述
+{{#each definitions}}
+## <a name="/definitions/{{key}}">{{@key}}</a>
+
+<table class="confluenceTable">
+<colgroup><col><col></colgroup>
+<tbody><tr>
+<th class="confluenceTh">字段名</th>
+<th class="confluenceTh">类型</th>
+<th class="confluenceTh">是否必填</th>
+<th class="confluenceTh">描述</th>
+<th class="confluenceTh">示例</th>
+</tr>
+    {{#each this.properties}}
+        <tr>
+            <td class="confluenceTd">{{@key}}</td>
+            <td class="confluenceTd">
+                {{#ifeq type "array"}}
+                {{#items.$ref}}
+                    {{type}}[<a href="{{items.$ref}}">{{basename items.$ref}}</a>]
+                {{/items.$ref}}
+                {{^items.$ref}}{{type}}[{{items.type}}]{{/items.$ref}}
+                {{else}}
+                    {{#$ref}}<a href="{{$ref}}">{{basename $ref}}</a>{{/$ref}}
+                    {{^$ref}}{{type}}{{#format}} ({{format}}){{/format}}{{/$ref}}
+                {{/ifeq}}
+            </td>
+            <td class="confluenceTd">{{#required}}required{{/required}}{{^required}}optional{{/required}}</td>
+            <td class="confluenceTd">{{#description}}{{{description}}}{{/description}}{{^description}}-{{/description}}</td>
+            <td class="confluenceTd">{{example}}</td>
+        </tr>
+    {{/each}}
+</tbody></table>
+{{/each}}
+

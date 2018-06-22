@@ -1,0 +1,84 @@
+{{#deprecated}}-deprecated-{{/deprecated}}
+<a id="{{operationId}}">{{summary}}</a>
+
+{{description}}
+
+{{#if externalDocs.url}}{{externalDocs.description}}. [See external documents for more details]({{externalDocs.url}})
+{{/if}}
+
+{{#if security}}
+#### Security
+{{/if}}
+
+{{#security}}
+{{#each this}}
+* {{@key}}
+{{#this}}   * {{this}}
+{{/this}}
+{{/each}}
+{{/security}}
+
+#### 请求信息
+
+{{#if consumes}}
+**Content-Type: ** {{join consumes ", "}}{{/if}}
+
+##### 参数信息
+{{#if parameters}}
+<table class="confluenceTable">
+<colgroup><col><col></colgroup>
+<tbody><tr>
+<th class="confluenceTh">参数名</th>
+<th class="confluenceTh">位置</th>
+<th class="confluenceTh">是否必填</th>
+<th class="confluenceTh">描述</th>
+<th class="confluenceTh">默认值</th>
+<th class="confluenceTh">字段定义</th>
+</tr>
+{{/if}}
+
+{{#parameters}}
+<tr>
+    <td  class="confluenceTd">{{name}}</td>
+    <td class="confluenceTd">{{in}}</td>
+    <td class="confluenceTd">{{#if required}}yes{{else}}no{{/if}}</td>
+    <td class="confluenceTd">{{description}}{{#if pattern}} (**Pattern**: `{{pattern}}`){{/if}}</td>
+    <td class="confluenceTd"> - </td>
+{{#ifeq in "body"}}
+    <td class="confluenceTd">
+    {{#ifeq schema.type "array"}}Array[<a href="{{schema.items.$ref}}">{{basename schema.items.$ref}}</a>]{{/ifeq}}
+    {{#schema.$ref}}<a href="{{schema.$ref}}">{{basename schema.$ref}}</a> {{/schema.$ref}}
+    </td>
+{{else}}
+    {{#ifeq type "array"}}
+            <td class="confluenceTd">Array[{{items.type}}] ({{collectionFormat}})</td>
+    {{else}}
+            <td class="confluenceTd">{{type}} {{#format}}({{format}}){{/format}}</td>
+    {{/ifeq}}
+{{/ifeq}}
+</tr>
+{{/parameters}}
+{{#if parameters}}
+</table>
+{{/if}}
+
+
+#### 响应信息
+
+{{#if produces}}**Content-Type: ** {{join produces ", "}}{{/if}}
+
+<table class="confluenceTable">
+<colgroup><col><col></colgroup>
+<tbody><tr>
+<th class="confluenceTh">响应码</th>
+<th class="confluenceTh">描述</th>
+<th class="confluenceTh">返回类型</th>
+</tr>
+{{#each responses}}
+<tr>
+ <td  class="confluenceTd">{{@key}}</td>
+  <td class="confluenceTd">{{description}}</td>
+   <td class="confluenceTd">{{#schema.$ref}}<a href="{{schema.$ref}}">{{basename schema.$ref}}</a>{{/schema.$ref}}{{^schema.$ref}}{{#ifeq schema.type "array"}}Array[<a href="{{schema.items.$ref}}">{{basename schema.items.$ref}}</a>]{{else}}{{schema.type}}{{/ifeq}}{{/schema.$ref}}{{^schema}} - {{/schema}}</td>
+</tr>
+{{/each}}
+</table>
